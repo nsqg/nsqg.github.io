@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Qingguo Liu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='48' height='48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='24' cy='24' r='23' fill='%23666'/%3E%3Cpath d='M24 13l9.5 7.5-9.5 7.5-9.5-7.5L24 13z' fill='%23fff'/%3E%3C/svg%3E"> -->
+  <link rel="icon" type="image/png" href="imgs/NS.png">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%; background: #DAE8FC;
+      font-family: 'Segoe UI', Arial, sans-serif; font-size: 16px;
+    }
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: #F5F5F5; color: #333;
+      height: 54px; display: flex; align-items: center;
+      border-bottom: 1px solid #ccc; font-size: 1.05em;
+      justify-content: center;
+    }
+    .navbar .nav-list {
+      display: flex; gap: 18px;
+    }
+    .navbar .nav-link {
+      text-decoration: none; color: #444; padding: 3px 16px; border-radius: 5px;
+    }
+    .navbar .nav-link.active, .navbar .nav-link:hover {
+      background: #d8d8d8; color: #000;
+    }
+    .container {
+      display: flex; max-width: 1400px; margin: 0 auto; padding-top: 0; position: relative;
+    }
+    .side-profile {
+      position: fixed;
+      left: calc(50% - 700px); /* container max-width的一半 - container宽度的一半 */
+      top: 50px;
+      width: 240px;
+      height:calc(100vh - 54px);
+      background: #F5F5F5;
+      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
+      padding: 24px 16px;
+      display: flex; flex-direction: column; align-items: center;
+      z-index: 999;
+    }
+    .side-profile img {
+      width: 100px; height: 100px; border-radius: 50%; object-fit: cover;
+      margin-bottom: 10px;
+    }
+    .side-profile h2 {
+      font-size: 1.2em; margin: 6px 0; color: #222;
+    }
+    .side-profile .profile-location,
+    .side-profile .profile-email {
+      color: #666; font-size: 0.95em; margin: 3px 0;
+    }
+    .side-profile .profile-links a {
+      color: #444; margin-right: 10px; font-size: 1.4em;
+    }
+    .side-profile .profile-scholar {
+      font-size: 0.95em; margin-top: 10px;
+    }
+    .main-content {
+      margin-left: 260px; flex: 1; padding: 48px 64px;
+      background: #F5F5F5;
+    }
+    section {
+      background: #ffffff; border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      padding: 10px 48px; margin-bottom: 10px;
+    }
+    section h1 {
+      border-left: 4px solid #666; padding-left: 14px; color: #333; margin-bottom: 24px;font-size: 1.6rem;
+    }
+    .pub-item {
+      display: flex; gap: 30px; margin-top: 28px; background: #f7f8f9; border-radius: 12px;
+      box-shadow: 0 1px 6px #ccc4; padding: 24px; align-items: flex-start;
+    }
+    .pub-img-box {
+      width: 200px; height: 120px; display: flex; align-items: center; justify-content: center;
+      background: #fff; border: 1px solid #ccc; border-radius: 10px;
+    }
+    .pub-img-box img {
+      max-width: 100%; max-height: 100%; object-fit: contain;
+      border-radius: 6px;
+    }
+    .pub-info {
+      flex: 1;
+    }
+    .pub-info b {
+        font-size: 1.125rem;
+    }
+    .pub-meta, .pub-meta .authors {
+  font-size: 1rem; /* 16px */
+}
+.side-profile h2 {
+  font-size: 1.1rem;
+}
+    .pub-meta .authors {
+  margin-bottom: 8px;
+}
+.side-profile .profile-location,
+.side-profile .profile-email {
+  font-size: 0.9rem;
+}
+    .tags {
+      margin: 10px 0;
+    }
+    .tag {
+      background: #73c5b4; color: #333; padding: 3px 10px; border-radius: 6px;
+      margin-right: 8px; display: inline-block; font-size: 0.95em;
+    }
+    .tag2 {
+      background: #75c4f5; color: #333; padding: 3px 10px; border-radius: 6px;
+      margin-right: 8px; display: inline-block; font-size: 0.95em;
+    }    
+    .btn {
+      background: #00AB37; color: #fff; padding: 2px 12px; border-radius: 5px;
+      text-decoration: none; font-size: 0.93em; margin-right: 10px;margin-top: 10px;
+    }
+    .btn.disabled {
+      background: #aaa; color: #eee; pointer-events: none;
+    }
+    .menu-toggle {
+  display: none;
+  background: none;
+  font-size: 1.8rem;
+  border: none;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 54px;
+  right: 10px;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  border-radius: 10px;
+  z-index: 2000;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mobile-menu .menu-item {
+  display: block;
+  padding: 8px;
+  color: #333;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.menu-close {
+  background: none;
+  font-size: 1.2rem;
+  border: none;
+  margin-bottom: 10px;
+  float: right;
+  cursor: pointer;
+}
+
+/* 控制隐藏 */
+.hide-on-small {
+  display: inline-block;
+}
+
+@media (max-width: 950px) {
+  .hide-on-small {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .navbar {
+    justify-content: space-between;
+    padding: 0 16px;
+  }
+}
+
+/* 菜单浮层样式 */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 54px;
+  right: 10px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  padding: 16px;
+  z-index: 2000;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 180px;
+}
+
+.mobile-menu.show {
+  display: flex;
+}
+
+.mobile-menu .menu-item {
+  color: #333;
+  text-decoration: none;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.mobile-menu .menu-item:hover {
+  background: #f0f0f0;
+}
+
+
+    @media (max-width: 1400px) {
+  .container {
+    flex-direction: column;
+    padding-top: 10px;
+  }
+
+  .side-profile {
+    position: relative;
+    top: 50px;
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 10px;
+    box-shadow: none;
+    border-bottom: 1px solid #ccc;
+    left: 0 !important;
+    background: #f5f5f5;
+  }
+
+  .side-profile img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 10px;
+  }
+
+  .side-profile h2 {
+    font-size: 1em;
+    text-align: center;
+  }
+
+  .side-profile .profile-location {
+    font-size: 1em;
+    text-align: center;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 20px;
+  }
+
+  .pub-item {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pub-img-box {
+    margin-bottom: 14px;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .pub-info {
+    text-align: center;
+  }
+
+  .profile-icon-links {
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 12px;
+  }
+
+  .profile-icon-links a {
+    font-size: 1em;
+  }
+}
+    .profile-icon-links {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+.profile-icon-links a {
+  font-size: 1em;
+  color: #444;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.profile-icon-links a:hover {
+  color: #1DA98C;
+}
+  </style>
+</head>
+<body>
+<!-- 导航栏结构 -->
+<div class="navbar">
+<!-- 放在 .navbar 内部 -->
+<div class="nav-list" id="nav-list">
+    <a href="#about" class="nav-link">About Me</a>
+    <a href="#news" class="nav-link">News</a>
+    <a href="#publication" class="nav-link">Publications</a>
+    <a href="#services" class="nav-link hide-on-small">Services</a>
+    <a href="#honors" class="nav-link hide-on-small">Honors and Awards</a>
+  </div>
+  <button class="menu-toggle" onclick="toggleMenu()" id="menu-toggle">☰</button>
+  </div>
+  
+  <!-- 移动端折叠菜单 -->
+  <div id="mobile-menu" class="mobile-menu">
+    <a href="#services" class="menu-item">Services</a>
+    <a href="#honors" class="menu-item">Honors and Awards</a>
+  </div>
+  <div class="container">
+    <div class="side-profile">
+        <img src="imgs/lqg.jpg" alt="avatar">
+        <h2>Qingguo Liu</h2>
+        <div class="profile-location"><i class="ri-map-pin-2-line"></i> 中国·苏州</div>
+      
+        <!-- 图标链接部分 -->
+        <div class="profile-icon-links">
+          <!-- Email 图标 -->
+          <a href="mailto:liuqingguo@nuaa.edu.cn" title="Email">
+            <i class="ri-mail-line">Email</i>
+          </a>
+          <!-- GitHub 图标 -->
+          <a href="https://github.com/zbhfc712" target="_blank" title="GitHub">
+            <i class="ri-github-line">GitHub</i>
+          </a>
+          <!-- Scholar 图标 -->
+          <a href="https://scholar.google.com.hk/citations?user=qZmBrd8AAAAJ&hl=zh-CN" target="_blank" title="Google Scholar">
+            <i class="ri-graduation-cap-line">Google Scholar</i>
+          </a>
+        </div>
+      </div>
+    <div class="main-content">
+        <!-- News -->
+      <section id="news">
+        <h1>About Me</h1>
+        I am currently a PhD student in the School of Intelligent Science and Technology, Nanjing University, advised by prof. <a href="https://cszn.github.io/">Kai Zhang</a>. Previously, I received my master degree from Nanjing University of Aeronautics and Astronauticsin 2025, advised by prof. Pan Gao. 
+        <br>
+        <br>
+        Recently, my research interests have focused on camera pipeline and video restoration. Previously, I focused on image super-resolution.
+      </section>
+      <!-- News -->
+      <section id="news">
+        <h1>News</h1>
+        <ul class="news-list">
+          <!-- <li class="news-item"><span>2025.05</span>  </li> -->
+          <li class="news-item"><span>2024.04</span> One paper accepted to CVPR 2025!</li>
+          <li class="news-item"><span>2024.03</span> One paper accepted to IEEE TMM!</li>
+        </ul>
+      </section>
+      <!-- Services -->
+      <section id="services">
+        <h1>Services</h1>
+        <ul class="service-list">
+          <li class="service-item"><b>Conference Reviewer:</b>  ACMMM, NeurIPS</li>
+          <li class="service-item"><b>Journal Reviewer:</b> TMM</li>
+        </ul>
+      </section>
+      <!-- Publication -->
+      <section id="publication">
+        <h1>Publication</h1>
+        <ul class="pub-list">
+          <li class="pub-item">
+            <div class="pub-img-box">
+              <img src="imgs/CDFormer.png" alt="arxiv">
+            </div>
+            <div class="pub-info">
+              <b>CDFormer: When Degradation Prediction Embraces Diffusion Model for Blind Image Super-Resolution</b>
+              <div class="tags">
+                <span class="tag">CVPR 2024</span>
+                <!-- <span class="tag">Poster</span> -->
+              </div>
+              <div class="pub-meta">
+                <div class="authors">
+                <b>Qingguo Liu</b>, Chenyi Zhuang, Pan Gao, Jie Qin<br>
+            </div>
+                <a href="https://arxiv.org/pdf/2405.07648" class="btn">Arxiv</a>
+                <a href="https://github.com/I2-Multimedia-Lab/CDFormer" class="btn">GitHub</a>
+              </div>
+            </div>
+          </li>
+          <li class="pub-item">
+            <div class="pub-img-box">
+              <img src="imgs/DASD.png" alt="arxiv">
+            </div>
+            <div class="pub-info">
+              <b>Real-World Image Super-resolution via Diffusion Model: A Fidelity-Realness Tradeoff</b>
+              <div class="tags">
+                <span class="tag2">Going On</span>
+                <!-- <span class="tag">Oral</span> -->
+              </div>
+              <div class="pub-meta">
+                <div class="authors">
+                <b>Qingguo Liu</b>, Pan Gao<br>
+                </div>
+                <a href="javascript:void(0);" class="btn disabled" tabindex="-1">Arxiv</a>
+                <a href="javascript:void(0);" class="btn disabled" tabindex="-1">GitHub</a>
+              </div>
+            </div>
+          </li>
+          <li class="pub-item">
+            <div class="pub-img-box">
+              <img src="imgs/DSAT.png" alt="arxiv">
+            </div>
+            <div class="pub-info">
+              <b>Degradation-Aware Self-Attention Based Transformer for Blind Image Super-Resolution</b>
+              <div class="tags">
+                <span class="tag">IEEE TMM</span>
+                <!-- <span class="tag">Poster</span> -->
+              </div>
+              <div class="pub-meta">
+                <div class="authors">
+                  <b>Qingguo Liu</b>, Pan Gao, Kang Han, Ningzhong Liu, Wei Xiang
+                </div>
+                <a href="https://arxiv.org/pdf/2310.04180" class="btn">Arxiv</a>
+                <a href="https://github.com/I2-Multimedia-Lab/DSAT" class="btn">GitHub</a>
+              </div>
+            </div>
+          </li>
+          <!-- 继续添加更多论文 -->
+        </ul>
+      </section>
+      <!-- Education -->
+      <section id="education">
+        <h1>Education</h1>
+        <ul class="edu-list">
+          <li class="edu-item">
+            <span class="edu-icon"><i class="ri-graduation-cap-line"></i></span>
+            <div class="edu-main">
+              <b>Nanjing University</b> - Ph.D. in Computer Science and Technology<br>
+              <small>2025 - Present</small>
+            </div>
+          </li>
+          <li class="edu-item">
+            <span class="edu-icon"><i class="ri-graduation-cap-line"></i></span>
+            <div class="edu-main">
+              <b>Nanjing University Of Aeronautics And Astronautics</b> - M.S. in Computer Science and Technology<br>
+              <small>2022 - 2025</small>
+            </div>
+          </li>
+          <li class="edu-item">
+            <span class="edu-icon"><i class="ri-graduation-cap-line"></i></span>
+            <div class="edu-main">
+              <b>Henan University</b> - B.E. in Network Engineering<br>
+              <small>2018 - 2022</small>
+            </div>
+          </li>
+        </ul>
+      </section>
+      <!-- Honors and Awards -->
+      <section id="honors">
+        <h1>Honors and Awards</h1>
+        <ul class="award-list">
+          <li class="award-item">2024.10, National Scholarship, Nanjing University Of Aeronautics And Astronautics</li>
+          <li class="award-item">2024.10, Advanced scientific research Individual, Nanjing University Of Aeronautics And Astronautics</li>
+          <li class="award-item">2022.07, Excellent Graduate of Henan University</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
+
+
+<script>
+    function toggleMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const toggle = document.getElementById('menu-toggle');
+      const showing = menu.classList.contains('show');
+      if (showing) {
+        menu.classList.remove('show');
+        toggle.textContent = '☰';
+      } else {
+        menu.classList.add('show');
+        toggle.textContent = '✖';
+      }
+    }
+  </script>
